@@ -1,19 +1,15 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 const months = ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"];
 
-export default function ReportTracker() {
+export default function App() {
   const [students, setStudents] = useState([]);
   const [name, setName] = useState("");
   const [data, setData] = useState({});
   const [password, setPassword] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
+  const [currentMonth, setCurrentMonth] = useState(months[0]);
 
   const addStudent = () => {
     if (name && !students.includes(name)) {
@@ -42,25 +38,29 @@ export default function ReportTracker() {
       <div className="p-4 max-w-md mx-auto">
         {password ? (
           <div>
-            <Input
+            <input
               placeholder="비밀번호 입력"
               value={enteredPassword}
               onChange={(e) => setEnteredPassword(e.target.value)}
               type="password"
-              className="mb-2"
+              className="border p-2 mb-2 w-full"
             />
-            <Button onClick={handleLogin}>입장</Button>
+            <button onClick={handleLogin} className="bg-blue-500 text-white px-4 py-2 rounded w-full">
+              입장
+            </button>
           </div>
         ) : (
           <div>
-            <Input
+            <input
               placeholder="새 비밀번호 설정"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               type="password"
-              className="mb-2"
+              className="border p-2 mb-2 w-full"
             />
-            <Button onClick={() => setAuthenticated(true)}>설정 완료</Button>
+            <button onClick={() => setAuthenticated(true)} className="bg-green-500 text-white px-4 py-2 rounded w-full">
+              설정 완료
+            </button>
           </div>
         )}
       </div>
@@ -68,42 +68,45 @@ export default function ReportTracker() {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 max-w-xl mx-auto">
       <h1 className="text-xl font-bold mb-4">레포트 제출 체크</h1>
+
       <div className="mb-4">
-        <Input
+        <input
           placeholder="학생 이름 입력"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="mb-2"
+          className="border p-2 mr-2 w-2/3"
         />
-        <Button onClick={addStudent}>학생 추가</Button>
+        <button onClick={addStudent} className="bg-blue-500 text-white px-4 py-2 rounded">
+          학생 추가
+        </button>
       </div>
 
-      <Tabs defaultValue={months[0]}>
-        <TabsList className="overflow-x-auto whitespace-nowrap">
-          {months.map((month) => (
-            <TabsTrigger key={month} value={month}>
-              {month}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+      <div className="mb-4 flex gap-2 overflow-x-auto">
         {months.map((month) => (
-          <TabsContent key={month} value={month}>
-            <div className="grid gap-2">
-              {students.map((student) => (
-                <Card key={student} className="flex items-center justify-between p-2">
-                  <span>{student}</span>
-                  <Switch
-                    checked={data[month]?.[student] || false}
-                    onCheckedChange={() => toggleCheck(month, student)}
-                  />
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
+          <button
+            key={month}
+            onClick={() => setCurrentMonth(month)}
+            className={`px-3 py-1 rounded ${currentMonth === month ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+          >
+            {month}
+          </button>
         ))}
-      </Tabs>
+      </div>
+
+      <div className="grid gap-2">
+        {students.map((student) => (
+          <div key={student} className="flex justify-between items-center border p-2 rounded">
+            <span>{student}</span>
+            <input
+              type="checkbox"
+              checked={data[currentMonth]?.[student] || false}
+              onChange={() => toggleCheck(currentMonth, student)}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
