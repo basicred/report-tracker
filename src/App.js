@@ -6,7 +6,7 @@ export default function App() {
   const [students, setStudents] = useState([]);
   const [name, setName] = useState("");
   const [data, setData] = useState({});
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState(null); //비번없음
   const [enteredPassword, setEnteredPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(months[0]);
@@ -36,37 +36,41 @@ export default function App() {
   if (!authenticated) {
     return (
       <div className="p-4 max-w-md mx-auto">
-        {password ? (
-          <div>
-            <input
-              placeholder="비밀번호 입력"
-              value={enteredPassword}
-              onChange={(e) => setEnteredPassword(e.target.value)}
-              type="password"
-              className="border p-2 mb-2 w-full"
-            />
-            <button onClick={handleLogin} className="bg-blue-500 text-white px-4 py-2 rounded w-full">
-              입장
-            </button>
-          </div>
-        ) : (
-          <div>
-            <input
-              placeholder="새 비밀번호 설정"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              type="password"
-              className="border p-2 mb-2 w-full"
-            />
-            <button onClick={() => setAuthenticated(true)} className="bg-green-500 text-white px-4 py-2 rounded w-full">
-              설정 완료
-            </button>
-          </div>
-        )}
-      </div>
-    );
-  }
-
+      {password === null ? (
+  // 비밀번호를 아직 설정 안함
+  <div>
+    <input
+      placeholder="새 비밀번호 설정"
+      value={enteredPassword}
+      onChange={(e) => setEnteredPassword(e.target.value)}
+      type="password"
+      className="border p-2 mb-2 w-full"
+    />
+    <button
+      onClick={() => {
+        setPassword(enteredPassword);
+        setAuthenticated(true);
+      }}
+      className="bg-green-500 text-white px-4 py-2 rounded w-full"
+    >
+      설정 완료
+    </button>
+  </div>
+) : (
+  // 비밀번호 입력
+  <div>
+    <input
+      placeholder="비밀번호 입력"
+      value={enteredPassword}
+      onChange={(e) => setEnteredPassword(e.target.value)}
+      type="password"
+      className="border p-2 mb-2 w-full"
+    />
+    <button onClick={handleLogin} className="bg-blue-500 text-white px-4 py-2 rounded w-full">
+      입장
+    </button>
+  </div>
+)}
   return (
     <div className="p-4 max-w-xl mx-auto">
       <h1 className="text-xl font-bold mb-4">레포트 제출 체크</h1>
